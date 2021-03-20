@@ -1,9 +1,12 @@
 package sample;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -57,10 +60,13 @@ public class Controller implements Runnable {
     private TableColumn<modelList, String> sonfiyat;
 
     @FXML
-    private TableColumn<modelList, ?> url;
+    private TableColumn<modelList, String> url;
+    ObservableList<modelList> listsOfElement;
 
     @FXML
     void basla(ActionEvent event) {
+
+
         dur.setDisable(false);
         basla.setDisable(true);
         progress.setVisible(true);
@@ -105,6 +111,15 @@ public class Controller implements Runnable {
     public static boolean isContinue=true;
     @FXML
     void initialize() {
+
+        listsOfElement= FXCollections.observableArrayList();
+        table.getItems().addAll(listsOfElement);
+
+        sira.setCellValueFactory(new PropertyValueFactory<>("sira"));
+        uadi.setCellValueFactory(new PropertyValueFactory<>("uadi"));
+        ilkfiyat.setCellValueFactory(new PropertyValueFactory<>("ilkfiyat"));
+        sonfiyat.setCellValueFactory(new PropertyValueFactory<>("sonfiyat"));
+        url.setCellValueFactory(new PropertyValueFactory<>("url"));
 
         mainThread=new Thread(this);
         progress.setVisible(false);
@@ -277,8 +292,17 @@ public class Controller implements Runnable {
         }
 
         if (allStuff.size() > 0) {
+            int index=0;
             for (model_data ele : allStuff) {
-                System.out.println(count + " " + ele.getNewValue() + " " + ele.getOldValue());
+                modelList data=new modelList(
+                     String.valueOf(index),
+                        ele.getTitle(),
+                        ele.getOldValue(),
+                        ele.getNewValue(),
+                        ele.getUrl()
+                );
+                index++;
+                listsOfElement.add(data);
                 count++;
             }
         }

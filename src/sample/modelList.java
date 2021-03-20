@@ -8,13 +8,13 @@ public class modelList {
 
     private String uadi;
 
-    private String ilkfiyat;
+    private Double ilkfiyat;
 
-    private String sonfiyat;
+    private Double sonfiyat;
 
     private String url;
 
-    public modelList(String sira, String uadi, String ilkfiyat, String sonfiyat, String url) {
+    public modelList(String sira, String uadi, Double ilkfiyat, Double sonfiyat, String url) {
         this.sira = sira;
         this.uadi = uadi;
         this.ilkfiyat = ilkfiyat;
@@ -38,19 +38,19 @@ public class modelList {
         this.uadi = uadi;
     }
 
-    public String getIlkfiyat() {
+    public Double getIlkfiyat() {
         return ilkfiyat;
     }
 
-    public void setIlkfiyat(String ilkfiyat) {
+    public void setIlkfiyat(Double ilkfiyat) {
         this.ilkfiyat = ilkfiyat;
     }
 
-    public String getSonfiyat() {
+    public Double getSonfiyat() {
         return sonfiyat;
     }
 
-    public void setSonfiyat(String sonfiyat) {
+    public void setSonfiyat(Double sonfiyat) {
         this.sonfiyat = sonfiyat;
     }
 
