@@ -65,26 +65,32 @@ public class Controller implements Runnable {
 
     @FXML
     void basla(ActionEvent event) {
-
-
-        dur.setDisable(false);
-        basla.setDisable(true);
-        progress.setVisible(true);
-        progress.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
-        task=new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                try {
-                    extractDataWithSelenium(urlgir.getText());
-                    progress.setProgress(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        boolean kara=urlgir.getText().equals("");
+        boolean karar2=urlgir==null;
+        listsOfElement.clear();
+        table.getItems().clear();
+        
+        if (!kara){
+            dur.setDisable(false);
+            basla.setDisable(true);
+            progress.setVisible(true);
+            progress.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+            task=new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    try {
+                        extractDataWithSelenium(urlgir.getText());
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
                 }
-                return null;
-            }
-        };
-        mainThread=new Thread(task);
-        mainThread.start();
+            };
+            mainThread=new Thread(task);
+            mainThread.start();
+        }else{
+            System.out.println("URL gir");
+        }
     }
 
     @Override
@@ -305,6 +311,8 @@ public class Controller implements Runnable {
                 listsOfElement.add(data);
                 count++;
             }
+            progress.setProgress(1.0);
+            table.getItems().addAll(listsOfElement);
         }
         return "";
     }

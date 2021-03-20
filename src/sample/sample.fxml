@@ -20,7 +20,7 @@
                   <Insets bottom="20.0" top="5.0" />
                </VBox.margin></Button>
             <Button fx:id="dur" mnemonicParsing="false" onAction="#dur" prefHeight="43.0" prefWidth="149.0" style="-fx-background-color: #860935;" text="Dur" textFill="#f2eaea" />
-            <Label text="Mevcut Sayfa" />
+            <Label text="Taranan Sayfalar" />
             <ListView fx:id="list" prefHeight="311.0" prefWidth="149.0" />
          </children>
       </VBox>
@@ -29,8 +29,9 @@
       <TableView fx:id="table" layoutX="154.0" layoutY="71.0" prefHeight="372.0" prefWidth="813.0">
         <columns>
             <TableColumn fx:id="sira" prefWidth="54.0" text="Sıra" />
-          <TableColumn fx:id="uadi" prefWidth="69.99996948242188" text="Ü. adı" />
-          <TableColumn fx:id="ilkfiyat" prefWidth="71.0" text="İlk Fİyat" />
+            <TableColumn fx:id="indirim" prefWidth="57.0" text="İndirim" />
+          <TableColumn fx:id="uadi" prefWidth="75.0" text="Ü. adı" />
+          <TableColumn fx:id="ilkfiyat" prefWidth="84.0" text="İlk Fİyat" />
             <TableColumn fx:id="sonfiyat" prefWidth="74.0" text="Son Fiyat" />
             <TableColumn fx:id="url" prefWidth="543.0000305175781" text="URL" />
         </columns>
