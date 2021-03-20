@@ -6,12 +6,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -21,7 +16,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class Controller {
+public class Controller implements Runnable {
 
     @FXML
     private ResourceBundle resources;
@@ -65,18 +60,38 @@ public class Controller {
     @FXML
     void basla(ActionEvent event) {
         if (urlgir.getText()!=null || urlgir.getText()!=""){
-
+            mainThread.start();
         }
 
     }
 
-    @FXML
-    void dur(ActionEvent event) {
-
+    @Override
+    public void run() {
+        System.out.println("calisma");
+//        try {
+////            progress.setVisible(true);
+////            progress.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+////            extractDataWithSelenium(urlgir.getText());
+////            progress.setProgress(1);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @FXML
+    void dur(ActionEvent event) {
+        if (mainThread.isAlive()){
+            System.out.println("durdurma");
+            mainThread.stop();
+        }
+    }
+    public static Thread mainThread;
+
+
+    @FXML
     void initialize() {
+        mainThread=new Thread(this);
+        progress.setVisible(false);
         System.setProperty("webdriver.chrome.driver", "C:/Users/keski/Desktop/chromedriver.exe");
     }
     public static double parseDouble2(String aString) {
