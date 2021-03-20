@@ -26,7 +26,7 @@ public class Controller {
     private Button dur;
 
     @FXML
-    private ListView<?> list;
+    private ListView<String> list;
 
     @FXML
     private TextField urlgir;
@@ -35,22 +35,22 @@ public class Controller {
     private ProgressBar progress;
 
     @FXML
-    private TableView<?> table;
+    private TableView<modelList> table;
 
     @FXML
-    private TableColumn<?, ?> sira;
+    private TableColumn<modelList, String> sira;
 
     @FXML
-    private TableColumn<?, ?> uadi;
+    private TableColumn<modelList, String> uadi;
 
     @FXML
-    private TableColumn<?, ?> ilkfiyat;
+    private TableColumn<modelList, String> ilkfiyat;
 
     @FXML
-    private TableColumn<?, ?> sonfiyat;
+    private TableColumn<modelList, String> sonfiyat;
 
     @FXML
-    private TableColumn<?, ?> url;
+    private TableColumn<modelList, ?> url;
 
     @FXML
     void basla(ActionEvent event) {
