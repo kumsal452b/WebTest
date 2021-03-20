@@ -1,9 +1,6 @@
 package sample;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -15,6 +12,11 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 
 public class Controller implements Runnable {
 
@@ -59,37 +61,51 @@ public class Controller implements Runnable {
 
     @FXML
     void basla(ActionEvent event) {
-        if (urlgir.getText()!=null || urlgir.getText()!=""){
-            mainThread.start();
-        }
-
+        dur.setDisable(false);
+        basla.setDisable(true);
+        progress.setVisible(true);
+        progress.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+        task=new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                try {
+                    extractDataWithSelenium(urlgir.getText());
+                    progress.setProgress(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        };
+        mainThread=new Thread(task);
+        mainThread.start();
     }
 
     @Override
     public void run() {
-        System.out.println("calisma");
-//        try {
-////            progress.setVisible(true);
-////            progress.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
-////            extractDataWithSelenium(urlgir.getText());
-////            progress.setProgress(1);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+
+        try {
+            progress.setVisible(true);
+            progress.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+            extractDataWithSelenium(urlgir.getText());
+            progress.setProgress(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     void dur(ActionEvent event) {
-        if (mainThread.isAlive()){
-            System.out.println("durdurma");
-            mainThread.stop();
-        }
+            isContinue=false;
+            dur.setDisable(true);
+            basla.setDisable(false);
     }
     public static Thread mainThread;
-
-
+    public static Task<Void> task;
+    public static boolean isContinue=true;
     @FXML
     void initialize() {
+
         mainThread=new Thread(this);
         progress.setVisible(false);
         System.setProperty("webdriver.chrome.driver", "C:/Users/keski/Desktop/chromedriver.exe");
@@ -154,7 +170,7 @@ public class Controller implements Runnable {
         }
         return tempData;
     }
-    static public String extractDataWithSelenium(String url) throws InterruptedException {
+    public String extractDataWithSelenium(String url) throws InterruptedException {
         int pageNumber = 1;
         int mCount = 1;
         int count = 0;
@@ -254,7 +270,10 @@ public class Controller implements Runnable {
             }
             currentPageIndex++;
             System.out.println(currentPageIndex);
-
+           list.getItems().add(currentPageIndex+"");
+           if (!isContinue){
+               break;
+           }
         }
 
         if (allStuff.size() > 0) {
