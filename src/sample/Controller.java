@@ -4,9 +4,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -60,6 +63,9 @@ public class Controller implements Runnable {
     private TableColumn<modelList, String> sonfiyat;
 
     @FXML
+    private TableColumn<modelList, Double> indirim;
+
+    @FXML
     private TableColumn<modelList, String> url;
     ObservableList<modelList> listsOfElement;
 
@@ -67,9 +73,10 @@ public class Controller implements Runnable {
     void basla(ActionEvent event) {
         boolean kara=urlgir.getText().equals("");
         boolean karar2=urlgir==null;
+        isContinue=true;
         listsOfElement.clear();
         table.getItems().clear();
-        
+
         if (!kara){
             dur.setDisable(false);
             basla.setDisable(true);
@@ -118,6 +125,38 @@ public class Controller implements Runnable {
     @FXML
     void initialize() {
 
+        table.getSelectionModel().setCellSelectionEnabled(true);
+        table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        MenuItem item = new MenuItem("Copy");
+        item.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                ObservableList<TablePosition> posList = table.getSelectionModel().getSelectedCells();
+                int old_r = -1;
+                StringBuilder clipboardString = new StringBuilder();
+                for (TablePosition p : posList) {
+                    int r = p.getRow();
+                    int c = p.getColumn();
+                    Object cell = table.getColumns().get(c).getCellData(r);
+                    if (cell == null)
+                        cell = "";
+                    if (old_r == r)
+                        clipboardString.append('\t');
+                    else if (old_r != -1)
+                        clipboardString.append('\n');
+                    clipboardString.append(cell);
+                    old_r = r;
+                }
+                final ClipboardContent content = new ClipboardContent();
+                content.putString(clipboardString.toString());
+                Clipboard.getSystemClipboard().setContent(content);
+            }
+        });
+        ContextMenu menu = new ContextMenu();
+        menu.getItems().add(item);
+        table.setContextMenu(menu);
+
         listsOfElement= FXCollections.observableArrayList();
         table.getItems().addAll(listsOfElement);
 
@@ -126,6 +165,7 @@ public class Controller implements Runnable {
         ilkfiyat.setCellValueFactory(new PropertyValueFactory<>("ilkfiyat"));
         sonfiyat.setCellValueFactory(new PropertyValueFactory<>("sonfiyat"));
         url.setCellValueFactory(new PropertyValueFactory<>("url"));
+        indirim.setCellValueFactory(new PropertyValueFactory<>("indirim"));
 
         mainThread=new Thread(this);
         progress.setVisible(false);
@@ -298,14 +338,16 @@ public class Controller implements Runnable {
         }
 
         if (allStuff.size() > 0) {
-            int index=0;
+            int index=1;
             for (model_data ele : allStuff) {
+                Double indirimYuzde=((ele.getOldValue()- ele.getNewValue())*100)/ ele.getOldValue();
                 modelList data=new modelList(
                      String.valueOf(index),
                         ele.getTitle(),
                         ele.getOldValue(),
                         ele.getNewValue(),
-                        ele.getUrl()
+                        ele.getUrl(),
+                        indirimYuzde
                 );
                 index++;
                 listsOfElement.add(data);

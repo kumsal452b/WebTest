@@ -14,12 +14,23 @@ public class modelList {
 
     private String url;
 
-    public modelList(String sira, String uadi, Double ilkfiyat, Double sonfiyat, String url) {
+    private Double indirim;
+
+    public modelList(String sira, String uadi, Double ilkfiyat, Double sonfiyat, String url,Double indirim) {
         this.sira = sira;
         this.uadi = uadi;
         this.ilkfiyat = ilkfiyat;
         this.sonfiyat = sonfiyat;
         this.url = url;
+        this.indirim=indirim;
+    }
+
+    public Double getIndirim() {
+        return indirim;
+    }
+
+    public void setIndirim(Double indirim) {
+        this.indirim = indirim;
     }
 
     public String getSira() {
